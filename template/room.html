@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat Room</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #dcdcdc;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .chat-container {
+        background: white;
+        width: 400px;
+        height: 90vh; /* fixed height like WhatsApp */
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      h2 {
+        text-align: center;
+        margin: 10px 0;
+        background-color: #f1f1f1;
+        padding: 10px;
+      }
+
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+      }
+
+      .message {
+        margin: 10px 0;
+      }
+
+      .text {
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        max-width: 80%;
+        word-wrap: break-word;
+      }
+
+      .sender .text {
+        background-color: orange;
+        margin-right: auto;
+      }
+
+      .me .text {
+        background-color: blue;
+        margin-left: auto;
+      }
+
+      .name {
+        font-size: 12px;
+        margin-top: 5px;
+        color: #444;
+      }
+
+      .input-box {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        background-color: #f9f9f9;
+      }
+
+      .input-box input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px 0 0 10px;
+        outline: none;
+      }
+
+      .input-box button {
+        padding: 10px 15px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 0 10px 10px 0;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <h2>{{user}} Welcome to {{room_name}}</h2>
+
+      <div class="messages">
+        <!-- Example messages -->
+        <div class="message sender">
+          <p class="text">Hello, how are you?</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message me">
+          <p class="text">
+            I'm good, thanks! You?heehgeg rjhjkr hherkje jebrjbr bjwebr jrjmew jfr ewhj
+          </p>
+          <span class="name">Me</span>
+        </div>
+
+        <!-- Add more messages to test scroll -->
+        <div class="message sender">
+          <p class="text">Working on a project...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message me">
+          <p class="text">Nice, keep it up!</p>
+          <span class="name">Me</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Thanks!</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">More messages...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message me">
+          <p class="text">Nice, keep it up!</p>
+          <span class="name">Me</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message me">
+          <p class="text">Nice, keep it up!</p>
+          <span class="name">Me</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scr...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">t...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+        <div class="message sender">
+          <p class="text">Scroll test...</p>
+          <span class="name">Sender</span>
+        </div>
+      </div>
+
+      <div class="input-box">
+        <input type="text" placeholder="Enter your message" />
+        <button>✓</button>
+      </div>
+    </div>
+  </body>
+</html>
