@@ -23,6 +23,7 @@ Django==5.0
 django-environ==0.11.2
 environ==1.0
 filelock==3.14.0
+gunicorn==23.0.0
 hyperlink==21.0.0
 idna==3.6
 incremental==24.7.2
