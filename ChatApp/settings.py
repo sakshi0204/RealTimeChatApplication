@@ -31,14 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #"daphne",
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #"channels",
+    "channels",
     "chat",
 ]
 
@@ -70,7 +70,9 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'ChatApp.asgi.application'
 WSGI_APPLICATION = 'ChatApp.wsgi.application'
+
 
 
 # Database
@@ -121,3 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}

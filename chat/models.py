@@ -13,3 +13,4 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{str(self.room)} - {self.sender} "
+    

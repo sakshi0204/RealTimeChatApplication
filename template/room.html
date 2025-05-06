@@ -2,192 +2,215 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Chat Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
     <style>
-      body {
+      * {
         margin: 0;
         padding: 0;
-        background-color: #dcdcdc;
-        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .page-container {
+        background-color: #b1b1b1;
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 100%;
         height: 100vh;
       }
 
-      .chat-container {
-        background: white;
-        width: 400px;
-        height: 90vh; /* fixed height like WhatsApp */
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
-        overflow: hidden;
+      .content {
+        width: 80%;
+        max-width: 500px;
+        padding: 2rem;
+        max-height: 80vh;
+        background-color: #eef0f2;
+        border-radius: 1rem;
+        box-shadow: 0px 0px 1rem 0px rgba(0, 0, 0, 0.2);
+        display: grid;
+        grid-template-rows: fit-content auto fit-content;
       }
 
-      h2 {
+      h1 {
         text-align: center;
-        margin: 10px 0;
-        background-color: #f1f1f1;
-        padding: 10px;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
       }
 
-      .messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
+      input[type="text"] {
+        outline: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        background-color: #dadee1;
+        border-radius: 2rem;
+        width: 100%;
+        text-align: center;
       }
 
-      .message {
-        margin: 10px 0;
+      button {
+        border: 0;
+        outline: 0;
+        padding: 0.5rem 0.75rem;
+        background-color: #1b1f24;
+        border-radius: 2rem;
+        color: #ffffff;
+        font-size: 1.25rem;
+        font-weight: bold;
+        transition: 0.25s ease;
+        cursor: pointer;
       }
 
-      .text {
-        padding: 10px;
-        border-radius: 5px;
-        color: white;
-        max-width: 80%;
+      button:hover {
+        background-color: #353a41;
+      }
+
+      form {
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: auto 2.5rem;
+        gap: 0.5rem;
+      }
+
+      textarea {
+        height: 5rem;
+        resize: none;
+        outline: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        background-color: #dadee1;
+        border-radius: 0.5rem;
+        width: 100%;
+        overflow-y: scroll;
+      }
+
+      .single-message {
+        width: fit-content;
+        max-width: 60%;
+        clear: both;
+      }
+
+      .msg-body {
+        margin-top: 0.25rem;
+        padding: 0.5rem;
+        background-color: #ff7300;
+        color: #ffffff;
+        font-size: 1rem;
+        border-radius: 0.25rem;
         word-wrap: break-word;
       }
 
-      .sender .text {
-        background-color: orange;
-        margin-right: auto;
+      .sent {
+        float: right;
       }
 
-      .me .text {
-        background-color: blue;
-        margin-left: auto;
+      .sent > .msg-body {
+        background-color: #8c00ff;
       }
 
-      .name {
-        font-size: 12px;
-        margin-top: 5px;
-        color: #444;
+      .sender {
+        margin-top: 0.25rem;
+        font-size: 0.75rem;
       }
 
-      .input-box {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #ccc;
-        background-color: #f9f9f9;
-      }
-
-      .input-box input {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 10px 0 0 10px;
-        outline: none;
-      }
-
-      .input-box button {
-        padding: 10px 15px;
-        background-color: black;
-        color: white;
-        border: none;
-        border-radius: 0 10px 10px 0;
-        cursor: pointer;
+      .chats-container {
+        width: 100%;
+        height: 20rem;
+        overflow-y: auto;
       }
     </style>
   </head>
+
   <body>
-    <div class="chat-container">
-      <h2>{{user}} Welcome to {{room_name}}</h2>
-
-      <div class="messages">
-        <!-- Example messages -->
-        <div class="message sender">
-          <p class="text">Hello, how are you?</p>
-          <span class="name">Sender</span>
+    <div class="page-container">
+      <div class="content">
+        <h1>Welcome to {{room_name}}</h1>
+        <div class="chats-container" id="chats-container">
+          <!-- DISPLAY MESSAGES SENT TO THIS ROOM -->
+          {% for message in messages %} {% if message.sender.lower == user.lower %}
+          <div class="single-message sent">
+            <div class="msg-body">{{message.message}}</div>
+            <p class="sender">Me</p>
+          </div>
+          {% else %}
+          <div class="single-message">
+            <div class="msg-body">{{message.message}}</div>
+            <p class="sender">{{message.sender}}</p>
+          </div>
+          {% endif %} {% endfor %}
         </div>
-        <div class="message me">
-          <p class="text">
-            I'm good, thanks! You?heehgeg rjhjkr hherkje jebrjbr bjwebr jrjmew jfr ewhj
-          </p>
-          <span class="name">Me</span>
-        </div>
-
-        <!-- Add more messages to test scroll -->
-        <div class="message sender">
-          <p class="text">Working on a project...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message me">
-          <p class="text">Nice, keep it up!</p>
-          <span class="name">Me</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Thanks!</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">More messages...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message me">
-          <p class="text">Nice, keep it up!</p>
-          <span class="name">Me</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message me">
-          <p class="text">Nice, keep it up!</p>
-          <span class="name">Me</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scr...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">t...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-        <div class="message sender">
-          <p class="text">Scroll test...</p>
-          <span class="name">Sender</span>
-        </div>
-      </div>
-
-      <div class="input-box">
-        <input type="text" placeholder="Enter your message" />
-        <button>✓</button>
+        <form action="" id="msg-form" method="post">
+          <!-- For the sake of security, all Django Post forms must have a csrf token tag -->
+          <!-- {% csrf_token %} -->
+          <textarea
+            name="message"
+            id="message"
+            cols="30"
+            rows="10"
+            placeholder="Enter your message"
+          ></textarea>
+          <button type="submit">&#10003;</button>
+        </form>
       </div>
     </div>
+    <script>
+      const socketURL = `ws://${window.location.host}/ws/messages/{{room_name}}/`;
+      console.log("Establishing Socket Connection");
+      const socket = new WebSocket(socketURL);
+
+      // SEND MESSAGE TO THE BACKEND
+      const message_form = document.getElementById("msg-form");
+      message_form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        let message_sent = document.getElementById("message").value;
+        socket.send(
+          JSON.stringify({
+            message: message_sent,
+            room_name: "{{room_name}}",
+            sender: "{{user}}",
+          })
+        );
+      });
+
+      const chats_div = document.getElementById("chats-container");
+
+      // SCROLL TO BOTTOM
+      const scrollToBottom = () => {
+        chats_div.scrollTop = chats_div.scrollHeight;
+      };
+
+      // RECEIVE MESSAGE FROM THE BACKEND
+      socket.addEventListener("message", (e) => {
+        const data = JSON.parse(e.data)["message"];
+
+        let sender = data["sender"];
+        let content = data["message"];
+
+        // IF THE MESSAGE IS FROM THE CURRENT USER, CLEAR THE MESSAGE BOX
+        if (sender == "{{user}}") {
+          document.getElementById("message").value = "";
+        }
+
+        // APPEND THE MESSAGE TO THE CHAT CONTAINER
+        if (sender == "{{user}}") {
+          chats_div.innerHTML += `<div class="single-message sent">
+          <div class="msg-body">${content}</div>
+          <p class="sender">Me</p>
+        </div>`;
+        } else {
+          chats_div.innerHTML += `<div class="single-message">
+          <div class="msg-body">${content}</div>
+          <p class="sender">${sender}</p>
+        </div>`;
+        }
+
+        // SCROLL TO THE BOTTOM OF THE CHAT
+        scrollToBottom();
+      });
+    </script>
   </body>
 </html>
