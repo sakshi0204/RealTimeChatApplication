@@ -1,0 +1,19 @@
+# Ignore virtual environment folders
+chat_env/
+ChatApp/chat_env/
+
+# Ignore Python cache files
+_pycache_/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore database and media if needed
+db.sqlite3
+media/
+
+# Ignore environment variable files
+.env
+
+# Ignore VS Code folder
+.vscode/

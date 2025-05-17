@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .page-container {
+        background-color: #b1b1b1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100vh;
+      }
+
+      .content {
+        width: 80%;
+        max-width: 600px;
+        padding: 2rem;
+        max-height: 80vh;
+        background-color: #eef0f2;
+        border-radius: 1rem;
+        box-shadow: 0px 0px 1rem 0px rgba(0, 0, 0, 0.2);
+        display: grid;
+        grid-template-rows: fit-content auto fit-content;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      input[type="text"] {
+        outline: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        background-color: #dadee1;
+        border-radius: 2rem;
+        width: 100%;
+        text-align: center;
+      }
+
+      button {
+        border: 0;
+        outline: 0;
+        padding: 0.5rem 0.75rem;
+        background-color: #1b1f24;
+        border-radius: 2rem;
+        color: #ffffff;
+        font-size: 1.25rem;
+        font-weight: bold;
+        transition: 0.25s ease;
+        cursor: pointer;
+        width: 50px;
+      }
+
+      button:hover {
+        background-color: #353a41;
+      }
+
+      form {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      textarea {
+        flex: 1;
+        height: 5rem;
+        resize: none;
+        outline: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        background-color: #dadee1;
+        border-radius: 0.5rem;
+      }
+
+      #file-input {
+        display: none;
+      }
+
+      .file-label {
+        padding: 0.5rem 1rem;
+        background-color: #dadee1;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .file-link {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .chats-container {
+        width: 100%;
+        height: 20rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Adds spacing between messages */
+      }
+
+      .single-message {
+        display: flex;
+        flex-direction: column;
+        max-width: 60%;
+        word-wrap: break-word;
+      }
+
+      .single-message.sent {
+        align-self: flex-end; /* Aligns sent messages to the right */
+        text-align: right;
+      }
+
+      .msg-body {
+        margin-top: 0.25rem;
+        padding: 0.5rem;
+        background-color: #ff7300;
+        color: #ffffff;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        word-wrap: break-word;
+      }
+
+      .sent .msg-body {
+        background-color: #8c00ff;
+      }
+
+      .sender {
+        margin-top: 0.25rem;
+        font-size: 0.75rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page-container">
+      <div class="content">
+        <h1>Welcome to {{room_name}}</h1>
+        <div class="chats-container" id="chats-container">
+          <!-- DISPLAY MESSAGES SENT TO THIS ROOM -->
+          {% for message in messages %} {% if message.sender.lower == user.lower %}
+          <div class="single-message sent">
+            <div class="msg-body">{{ message.message }}</div>
+            {% if message.file %}
+            <a href="{{ message.file.url }}" target="_blank" class="file-link"
+              >View Uploaded File</a
+            >
+            {% endif %}
+            <p class="sender">Me</p>
+          </div>
+          {% else %}
+          <div class="single-message">
+            <div class="msg-body">{{ message.message }}</div>
+            {% if message.file %}
+            <a href="{{ message.file.url }}" target="_blank" class="file-link"
+              >View Uploaded File</a
+            >
+            {% endif %}
+            <p class="sender">{{ message.sender }}</p>
+          </div>
+          {% endif %} {% endfor %}
+        </div>
+        <form action="" id="msg-form" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <textarea
+            name="message"
+            id="message"
+            cols="30"
+            rows="10"
+            placeholder="Enter your message"
+          ></textarea>
+
+          <label for="file-input" class="file-label">Choose a file</label>
+          <input
+            type="file"
+            name="file"
+            id="file-input"
+            accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          />
+
+          <button type="submit">&#10003;</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const socketURL = `ws://${window.location.host}/ws/messages/{{room_name}}/`;
+      console.log("Establishing Socket Connection");
+      const socket = new WebSocket(socketURL);
+
+      // SEND MESSAGE TO THE BACKEND
+      const message_form = document.getElementById("msg-form");
+      message_form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        let message_sent = document.getElementById("message").value;
+        let formData = new FormData(message_form);
+        let file = formData.get("file");
+
+        // Check if the user is sending a file or text
+        let fileName = file ? file.name : null;
+
+        // Send the message (with or without a file)
+        socket.send(
+          JSON.stringify({
+            message: message_sent,
+            room_name: "{{room_name}}",
+            sender: "{{user}}",
+            file: fileName,
+          })
+        );
+
+        // Clear the file input after sending the message
+        document.getElementById("file-input").value = "";
+
+        // Clear the message input
+        document.getElementById("message").value = "";
+      });
+
+      const chats_div = document.getElementById("chats-container");
+
+      // SCROLL TO BOTTOM
+      const scrollToBottom = () => {
+        chats_div.scrollTop = chats_div.scrollHeight;
+      };
+
+      // RECEIVE MESSAGE FROM THE BACKEND
+      socket.addEventListener("message", (e) => {
+        const data = JSON.parse(e.data)["message"];
+        let sender = data["sender"];
+        let content = data["message"];
+        let file = data["file"];
+
+        // IF THE MESSAGE IS FROM THE CURRENT USER, CLEAR THE MESSAGE BOX
+        if (sender == "{{user}}") {
+          document.getElementById("message").value = "";
+        }
+
+        // APPEND THE MESSAGE TO THE CHAT CONTAINER
+        if (sender == "{{user}}") {
+          chats_div.innerHTML += `
+            <div class="single-message sent">
+              <div class="msg-body">${content}</div>
+              ${
+                file
+                  ? `<a href="/media/${file}" target="_blank" class="file-link">View Uploaded File</a>`
+                  : ""
+              }
+              <p class="sender">Me</p>
+            </div>`;
+        } else {
+          chats_div.innerHTML += `
+            <div class="single-message">
+              <div class="msg-body">${content}</div>
+              ${
+                file
+                  ? `<a href="/media/${file}" target="_blank" class="file-link">View Uploaded File</a>`
+                  : ""
+              }
+              <p class="sender">${sender}</p>
+            </div>`;
+        }
+
+        // SCROLL TO THE BOTTOM OF THE CHAT
+        scrollToBottom();
+      });
+    </script>
+  </body>
+</html>

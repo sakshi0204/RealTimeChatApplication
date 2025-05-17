@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .page-container {
+        background-color: #b1b1b1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100vh;
+      }
+
+      .content {
+        width: 80%;
+        max-width: 400px;
+        padding: 2rem;
+        background-color: #eef0f2;
+        border-radius: 1rem;
+        box-shadow: 0px 0px 1rem 0px rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      input,
+      select {
+        outline: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        background-color: #dadee1;
+        border-radius: 2rem;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      button {
+        margin-top: 1rem;
+        border: 0;
+        outline: 0;
+        padding: 0.5rem 2rem;
+        background-color: #1b1f24;
+        border-radius: 2rem;
+        color: #ffffff;
+        font-size: 1.25rem;
+        font-weight: bold;
+        transition: 0.25s ease;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #353a41;
+      }
+
+      .errorlist {
+        color: #b1b1b1;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        list-style: none;
+        text-align: center;
+      }
+
+      .login-link-container {
+        text-align: center;
+        margin-top: 1rem;
+      }
+
+      .login-link {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+      <div class="content">
+        <h1>Sign Up</h1>
+        <form method="post">
+          {% csrf_token %} {% if form.non_field_errors %}
+          <ul class="errorlist">
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %} {% for field in form %}
+          <div>
+            {% if field.errors %}
+            <ul class="errorlist">
+              {% for error in field.errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %} {{ field }}
+          </div>
+          {% endfor %}
+
+          <button type="submit">Sign Up</button>
+
+          <!-- Centered Login Link -->
+          <div class="login-link-container">
+            <a href="{% url 'login' %}" class="login-link">Already Login? Click Here!</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function removeErrorMessage() {
+        const errorMessages = document.querySelectorAll("ul.errorlist li");
+        errorMessages.forEach((error) => {
+          setTimeout(() => {
+            error.style.display = "none";
+          }, 2000);
+        });
+      }
+
+      // Call this function to remove the error message after 5 seconds
+      removeErrorMessage();
+    </script>
+  </body>
+</html>
